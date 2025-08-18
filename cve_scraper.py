@@ -30,7 +30,6 @@ class CVEFetcher:
             "pubEndDate" : self.CURRENT_DATE,
             "resultsPerPage": 2000
         }
-        #print("params: ",params)
 
         headers = {}
         if self.API_KEY:
@@ -40,11 +39,14 @@ class CVEFetcher:
         print("Récupération des nouvelles CVE depuis NVD...")
         with httpx.Client() as client:
             response = client.get(self.BASE_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
+            try:
+                response.raise_for_status()
+                data = response.json()
+            except:
+                print("Request error 404, please check the last run date.")
+                exit(1)
 
         date_str = datetime.utcnow().strftime("%Y_%m_%d")
-        #print("date str :",date_str)
         filename = f"nvd_new_cve_{date_str}.json"
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -52,7 +54,7 @@ class CVEFetcher:
         print(f"{len(data.get('vulnerabilities', []))} nouvelles CVE sauvegardées dans {filename}")
 
         # Update last update time
-        #with open(self.LAST_RUN_FILE, "w") as f:
-        #    f.write(datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000 UTC"))
+        with open(self.LAST_RUN_FILE, "w") as f:
+            f.write(datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000 UTC"))
 
         return filename
