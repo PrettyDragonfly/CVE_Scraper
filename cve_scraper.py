@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import os
 import httpx
 
+
 class CVEFetcher:
     API_KEY = None
     LAST_RUN_FILE = "last_run.txt"
@@ -27,7 +28,7 @@ class CVEFetcher:
         # Request parameters
         params = {
             "pubStartDate": self.LAST_RUN_DATE,
-            "pubEndDate" : self.CURRENT_DATE,
+            "pubEndDate": self.CURRENT_DATE,
             "resultsPerPage": 2000
         }
 
