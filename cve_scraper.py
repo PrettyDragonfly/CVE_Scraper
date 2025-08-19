@@ -15,11 +15,15 @@ class CVEFetcher:
 
     def read_last_run(self):
         # Last run date initialisation
-        if os.path.exists(self.LAST_RUN_FILE):
-            with open(self.LAST_RUN_FILE, "r") as f:
-                self.LAST_RUN_DATE = f.read().strip()
-        else:
-            self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        # if os.path.exists(self.LAST_RUN_FILE):
+        #     with open(self.LAST_RUN_FILE, "r") as f:
+        #         self.LAST_RUN_DATE = f.read().strip()
+        # else:
+        #     self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+        # FOR DEBUG AND FEATURE DEV
+        self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        #################################
 
         print(f"Dernière récupération : {self.LAST_RUN_DATE}")
 

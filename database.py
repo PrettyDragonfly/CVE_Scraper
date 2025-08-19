@@ -48,7 +48,18 @@ class DB:
                 description, metrics, weaknesses, sources
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (cve_id) DO NOTHING;
+            ON CONFLICT (cve_id) DO UPDATE
+            SET
+                cvss = EXCLUDED.cvss,
+                sourceIdentifier = EXCLUDED.sourceIdentifier,
+                published = EXCLUDED.published,
+                lastModified = EXCLUDED.lastModified,
+                vulnStatus = EXCLUDED.vulnStatus,
+                description = EXCLUDED.description,
+                metrics = EXCLUDED.metrics,
+                weaknesses = EXCLUDED.weaknesses,
+                sources = EXCLUDED.sources
+            WHERE cves.cve_database.lastModified < EXCLUDED.lastModified;
         """
         for vuln in data:
             # Fix des exceptions

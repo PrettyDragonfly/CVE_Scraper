@@ -5,8 +5,12 @@ from database import DB
 
 def main():
     # Fetching des données sur NVD
-    fetcher = CVEFetcher(None)
-    filename = fetcher.fetch()
+    #fetcher = CVEFetcher(None)
+    #filename = fetcher.fetch()
+
+    ##### FOR DEBUG AND FEATURE DEV
+    filename = "file_test.json"
+    ######################################
 
     # Parsing des données pour garder que ce qui nous intéresse
     parser = CVEParser()
