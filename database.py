@@ -1,4 +1,5 @@
 import psycopg2
+import json
 
 
 class DB:
@@ -26,6 +27,7 @@ class DB:
         cursor.execute("CREATE SCHEMA IF NOT EXISTS cves;")
         sql = ''' CREATE TABLE IF NOT EXISTS cves.cve_database(
             cve_id TEXT PRIMARY KEY,
+            cvss NUMERIC,
             sourceIdentifier TEXT,
             published DATE,
             lastModified DATE,
@@ -36,6 +38,40 @@ class DB:
             sources JSONB
         ); '''
         cursor.execute(sql)
+        print("Table cves.cve_database created successfully!")
+
+    @staticmethod
+    def insert_data(cursor, data):
+        sql = """
+            INSERT INTO cves.cve_database (
+                cve_id, cvss, sourceIdentifier, published, lastModified, vulnStatus,
+                description, metrics, weaknesses, sources
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (cve_id) DO NOTHING;
+        """
+        for vuln in data:
+            # Fix des exceptions
+            if data[vuln]["metrics"]:
+                cvss = data[vuln]["metrics"][0]["cvssData"]["baseScore"]
+            else:
+                cvss = None
+            if data[vuln]["weaknesses"]:
+                weaknesses = data[vuln]["weaknesses"][0]
+            else:
+                weaknesses = None
+            cursor.execute(sql, (
+                data[vuln]["id"],
+                cvss,
+                data[vuln]["sourceIdentifier"],
+                data[vuln]["published"],
+                data[vuln]["lastModified"],
+                data[vuln]["vulnStatus"],
+                data[vuln]["descriptions"],
+                json.dumps(data[vuln]["metrics"]),  # dict → JSON
+                json.dumps(weaknesses),  # dict/list → JSON
+                json.dumps(data[vuln]["sources"])  # dict/list → JSON
+            ))
 
     @staticmethod
     def view_table(cursor, table_name):

@@ -24,6 +24,12 @@ class CVEParser:
                 elif "cvssMetricV2" in vuln["cve"]["metrics"].keys():
                     cve_database[cve_id]["metrics"] = vuln["cve"]["metrics"]["cvssMetricV2"]
                 else:
-                    print("Il n'y a pas de CVSS : cve-id = "+cve_id)
+                    #print("Il n'y a pas de CVSS : cve-id = "+cve_id)
+                    cve_database[cve_id]["metrics"] = {}
+                cve_database[cve_id]["sources"] = vuln["cve"]["references"]
+                del cve_database[cve_id]["references"]
+                if not "weaknesses" in cve_database[cve_id].keys():
+                    cve_database[cve_id]["weaknesses"] = []
             with open("cve_db.json", "w", encoding="utf-8") as f:
                 json.dump(cve_database, f, ensure_ascii=False, indent=2)
+            return cve_database
