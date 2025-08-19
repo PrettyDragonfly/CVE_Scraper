@@ -13,6 +13,8 @@ def main():
     db = DB()
     conn, cursor = db.create_connection()
     db.view_dbs(cursor)
+    db.create_table(cursor)
+    db.view_table(cursor, "cves.cve_database")
     db.stop_connection(conn)
 
 
