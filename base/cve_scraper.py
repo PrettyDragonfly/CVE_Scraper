@@ -6,7 +6,7 @@ import httpx
 
 class CVEFetcher:
     API_KEY = None
-    LAST_RUN_FILE = "last_run.txt"
+    LAST_RUN_FILE = "../data/last_run.txt"
     BASE_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
     CURRENT_DATE = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
 

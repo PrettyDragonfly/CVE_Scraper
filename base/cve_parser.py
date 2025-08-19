@@ -30,6 +30,6 @@ class CVEParser:
                 del cve_database[cve_id]["references"]
                 if not "weaknesses" in cve_database[cve_id].keys():
                     cve_database[cve_id]["weaknesses"] = []
-            with open("cve_db.json", "w", encoding="utf-8") as f:
+            with open("../data/cve_db.json", "w", encoding="utf-8") as f:
                 json.dump(cve_database, f, ensure_ascii=False, indent=2)
             return cve_database

@@ -1,6 +1,5 @@
-from cve_scraper import CVEFetcher
-from cve_parser import CVEParser
-from database import DB
+from base.cve_parser import CVEParser
+from utils.database import DB
 
 
 def main():
