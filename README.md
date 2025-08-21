@@ -28,3 +28,7 @@ For **psycopg2**, you need to install Postgres on your machine.
     ``brew services start postgresql@17``
 
     
+**CPE Dictionary**
+You need to download the CPE dictionary and put it to the data folder:
+
+``curl -LO https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz``
