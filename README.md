@@ -4,7 +4,7 @@
 
 This repository contains a project designed to automatically monitor newly published CVEs on a daily basis. It retrieves the latest vulnerabilities, stores them in a database for tracking and analysis, and sends daily email notifications with the new CVEs to designated recipients.
 
-## Autor :bust_in_silhouette:
+## Author :bust_in_silhouette:
 
 * **Camille Bour** _alias_ [@PrettyDragonfly](https://github.com/PrettyDragonfly)
 
@@ -28,3 +28,7 @@ For **psycopg2**, you need to install Postgres on your machine.
     ``brew services start postgresql@17``
 
     
+**CPE Dictionary**
+You need to download the CPE dictionary and put it to the data folder:
+
+``curl -LO https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz``
