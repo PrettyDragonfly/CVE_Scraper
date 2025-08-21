@@ -31,4 +31,6 @@ For **psycopg2**, you need to install Postgres on your machine.
 **CPE Dictionary**
 You need to download the CPE dictionary and put it to the data folder:
 
-``curl -LO https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz``
+* On this link, go to the section ``Schema Version 2.0 :  CPE Dictionary 2.0 Schema`` to download the directory:
+
+      https://nvd.nist.gov/vuln/data-feeds#divJson20Feeds
