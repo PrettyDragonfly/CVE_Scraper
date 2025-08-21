@@ -4,7 +4,7 @@
 
 This repository contains a project designed to automatically monitor newly published CVEs on a daily basis. It retrieves the latest vulnerabilities, stores them in a database for tracking and analysis, and sends daily email notifications with the new CVEs to designated recipients.
 
-## Autor :bust_in_silhouette:
+## Author :bust_in_silhouette:
 
 * **Camille Bour** _alias_ [@PrettyDragonfly](https://github.com/PrettyDragonfly)
 
