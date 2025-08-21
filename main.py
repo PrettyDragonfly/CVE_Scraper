@@ -1,14 +1,15 @@
 from base.cve_parser import CVEParser
+from base.cve_scraper import CVEFetcher
 from utils.database import DB
 
 
 def main():
     # Fetching des données sur NVD
-    #fetcher = CVEFetcher(None)
-    #filename = fetcher.fetch()
+    fetcher = CVEFetcher(None)
+    filename = fetcher.fetch()
 
     ##### FOR DEBUG AND FEATURE DEV
-    filename = "file_test.json"
+    #filename = "file_test.json"
     ######################################
 
     # Parsing des données pour garder que ce qui nous intéresse
