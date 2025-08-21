@@ -1,58 +1,45 @@
-import xml.etree.ElementTree as ET
 import json
+import glob
+import os
 
 
 class CPE:
 
-    FILE_PATH = "../data/official-cpe-dictionary_v2.3.xml"
+    FILE_PATH_BRUT = "../data/nvdcpe/*.json"
+    FILE_PATH_PRETTY = "../data/nvdcpe_pretty/"
+
     def __init__(self):
         pass
 
-    def extract(self, output_file = "../data/patterns.json"):
-        tree = ET.parse(self.FILE_PATH)
-        root = tree.getroot()
+    def reformat(self):
 
-        ns = {
-            "cpe": "http://cpe.mitre.org/dictionary/2.0",
-            "cpe23": "http://scap.nist.gov/schema/cpe-extension/2.3",
-        }
+        # Création du dossier de sortie
+        os.makedirs(self.FILE_PATH_PRETTY, exist_ok=True)
 
-        patterns = []
-        seen = set()
+        for file_path in glob.glob(self.FILE_PATH_BRUT):
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            new_file_path = file_path.replace("../data/nvdcpe/", "").replace(".json","")
 
-        for item in root.findall(".//cpe:cpe-item", ns):
-            # --- Version structurée CPE 2.3 ---
-            cpe23_item = item.find("cpe23:cpe23-item", ns)
-            if cpe23_item is not None:
-                name = cpe23_item.attrib.get("name", "")
-                parts = name.split(":")  # cpe:2.3:a:vendor:product:version:...
+            with open(self.FILE_PATH_PRETTY+new_file_path+"_pretty.json", "w",
+                   encoding="utf-8") as f:
+                 json.dump(data, f, indent=4, ensure_ascii=False)
 
-                if len(parts) > 5:
-                    vendor = parts[3]
-                    product = parts[4]
-                    version = parts[5]
+    # Convert cpe database to NLP Model
+    def build_model(self):
 
-                    # Basic clean up
-                    product = product.replace("\\", "")
-                    vendor = vendor.replace("\\", "")
-                    version = version.replace("\\", "")
+        products = []
 
-                    if product and product not in seen and product != "*":
-                        seen.add(product)
-                        patterns.append({"label": "PRODUCT", "pattern": product})
+        # Parcours de tous les fichiers JSON de la base
+        for file_path in glob.glob(self.FILE_PATH_PRETTY+"*.json"):
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                print(data.keys())
 
-                    if vendor and vendor not in seen and vendor != "*":
-                        seen.add(vendor)
-                        patterns.append({"label": "VENDOR", "pattern": vendor})
-
-                    if version and version not in seen and version != "*":
-                        seen.add(version)
-                        patterns.append({"label": "VERSION", "pattern": version})
-
-        with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(patterns, f, indent=2, ensure_ascii=False)
-
-        print(f"[✔] {len(patterns)} patterns exportés dans {output_file}")
-
-my_cpe = CPE()
-my_cpe.extract()
+                for item in data.get("products", []):
+                    cpe_info = item.get("cpe", {})
+                    cpe_name = cpe_info.get("cpeName")
+                    title_entries = cpe_info.get("titles", [])
+                    title = next((t["title"] for t in title_entries if t["lang"] == "en"), "")
+                    products.append({"cpe_name": cpe_name, "title": title})
+                print(products)
