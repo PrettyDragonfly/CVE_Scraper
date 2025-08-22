@@ -14,7 +14,7 @@ class CPE:
 
     def reformat(self):
 
-        # Output directory creation
+        # Output directory creation if not exists
         os.makedirs(self.FILE_PATH_PRETTY, exist_ok=True)
 
         for file_path in glob.glob(self.FILE_PATH_BRUT):
@@ -29,14 +29,14 @@ class CPE:
     # Convert cpe database to NLP Model
     def build_model(self):
 
-        # Si un cache existe déjà
+        # If cache doesn't exist
         if os.path.exists(self.CACHE_FILE):
             with open(self.CACHE_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
 
         products = []
 
-        # Parcours de tous les fichiers JSON de la base
+        # Iterate through all JSON files in the NVD database (CPE dictionary)
         for file_path in glob.glob(self.FILE_PATH_PRETTY+"*.json"):
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -48,7 +48,7 @@ class CPE:
                     title = next((t["title"] for t in title_entries if t["lang"] == "en"), "")
                     products.append({"cpe_name": cpe_name, "title": title})
 
-        # Save products in a file
+        # Save products in a cache file
         with open(self.CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(products, f, indent=4, ensure_ascii=False)
 

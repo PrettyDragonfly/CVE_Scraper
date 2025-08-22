@@ -15,14 +15,15 @@ class CVEFetcher:
 
     def read_last_run(self):
         # Last run date initialisation
-        # if os.path.exists(self.LAST_RUN_FILE):
-        #     with open(self.LAST_RUN_FILE, "r") as f:
-        #         self.LAST_RUN_DATE = f.read().strip()
-        # else:
-        #     self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        if os.path.exists(self.LAST_RUN_FILE):
+            with open(self.LAST_RUN_FILE, "r") as f:
+                self.LAST_RUN_DATE = f.read().strip()
+        else:
+            # Set the last run date to yesterday if last run date file doesn't exist
+            self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
         # FOR DEBUG AND FEATURE DEV
-        self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        #self.LAST_RUN_DATE = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
         #################################
 
         print(f"Dernière récupération : {self.LAST_RUN_DATE}")
@@ -49,6 +50,8 @@ class CVEFetcher:
                 data = response.json()
             except:
                 print("Request error 404, please check the last run date.")
+                print("-> The query only runs if the last run date is at least one day old.")
+                print("-> To force a run, delete the 'last_run.txt' file.")
                 exit(1)
 
         date_str = datetime.utcnow().strftime("%Y_%m_%d")

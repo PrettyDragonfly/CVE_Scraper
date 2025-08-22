@@ -4,19 +4,15 @@ from utils.database import DB
 
 
 def main():
-    # Fetching des données sur NVD
+    # Retrieve the latest CVE entries from the NVD
     fetcher = CVEFetcher(None)
     filename = fetcher.fetch()
 
-    ##### FOR DEBUG AND FEATURE DEV
-    #filename = "file_test.json"
-    ######################################
-
-    # Parsing des données pour garder que ce qui nous intéresse
+    # Filter and retain only the necessary fields before inserting into the database
     parser = CVEParser()
     data = parser.parse(filename)
 
-    # Stockage et visualisation des données dans la DB
+    # Store and visualize data in the database
     db = DB()
     conn, cursor = db.create_connection()
     #db.view_dbs(cursor)

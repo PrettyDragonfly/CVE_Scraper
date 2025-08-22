@@ -8,7 +8,7 @@ class DB:
         conn = psycopg2.connect(
             database="postgres",
             user="postgres",
-            password="dixt-Vafh7",
+            password="password",
             host="localhost",
             port="5432"
         )
@@ -62,7 +62,7 @@ class DB:
             WHERE cves.cve_database.lastModified < EXCLUDED.lastModified;
         """
         for vuln in data:
-            # Fix des exceptions
+            # Fix exceptions
             if data[vuln]["metrics"]:
                 cvss = data[vuln]["metrics"][0]["cvssData"]["baseScore"]
             else:
