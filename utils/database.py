@@ -1,16 +1,22 @@
 import psycopg2
 import json
+import os
 
 
 class DB:
     @staticmethod
     def create_connection():
+        # Load configuration from conf.json
+        with open(os.path.join("data/db_conf.json"), "r", encoding="utf-8") as f:
+            config = json.load(f)
+
+        # Create database connection
         conn = psycopg2.connect(
-            database="postgres",
-            user="postgres",
-            password="password",
-            host="localhost",
-            port="5432"
+            database=config["database"],
+            user=config["user"],
+            password=config["password"],
+            host=config["host"],
+            port=config["port"]
         )
         conn.autocommit = True
         cursor = conn.cursor()
