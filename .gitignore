@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# PyCharm / IntelliJ
+.idea/
+
+# Données générées
+data/nlp_model_with_cpe_patterns/
+data/nvdcpe
+data/nvdcpe_pretty
+data/cve_db.json
+data/db_conf.json
+data/last_run.txt
+data/products_cache.json
+
+# Fichiers de test locaux
+test_nlp.py
