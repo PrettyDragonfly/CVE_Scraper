@@ -1,18 +1,22 @@
 import json
+from utils.nlp import NLP
 
 
 class CVEParser:
     def __init__(self):
-        pass
+        self.nlp_model = NLP()
+        self.nlp_model.create_model()
 
-    @staticmethod
-    def parse(filename):
+    #@staticmethod
+    def parse(self,filename):
         with open(filename, 'r', encoding='utf-8') as file:
             data = json.load(file)
             cve_database = {}
             for vuln in data["vulnerabilities"]:
                 cve_id = vuln["cve"]["id"]
                 cve_database[cve_id] = vuln["cve"]
+                # Need to get the result
+                self.nlp_model.analyze(vuln["cve"]["descriptions"][0]["value"].replace("\n", ""))
                 cve_database[cve_id]["descriptions"] = vuln["cve"]["descriptions"][0]["value"].replace("\n", "")
                 del cve_database[cve_id]["cveTags"]
                 if "cvssMetricV40" in vuln["cve"]["metrics"].keys():
