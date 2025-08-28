@@ -33,6 +33,8 @@ class DB:
         cursor.execute("CREATE SCHEMA IF NOT EXISTS cves;")
         sql = ''' CREATE TABLE IF NOT EXISTS cves.cve_database(
             cve_id TEXT PRIMARY KEY,
+            product TEXT,
+            vendor TEXT,
             cvss NUMERIC,
             sourceIdentifier TEXT,
             published DATE,
@@ -50,13 +52,15 @@ class DB:
     def insert_data(cursor, data):
         sql = """
             INSERT INTO cves.cve_database (
-                cve_id, cvss, sourceIdentifier, published, lastModified, vulnStatus,
+                cve_id, product, vendor, cvss, sourceIdentifier, published, lastModified, vulnStatus,
                 description, metrics, weaknesses, sources
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (cve_id) DO UPDATE
             SET
                 cvss = EXCLUDED.cvss,
+                product = EXCLUDED.product,
+                vendor = EXCLUDED.vendor,
                 sourceIdentifier = EXCLUDED.sourceIdentifier,
                 published = EXCLUDED.published,
                 lastModified = EXCLUDED.lastModified,
@@ -79,6 +83,8 @@ class DB:
                 weaknesses = None
             cursor.execute(sql, (
                 data[vuln]["id"],
+                data[vuln]["product"],
+                data[vuln]["vendor"],
                 cvss,
                 data[vuln]["sourceIdentifier"],
                 data[vuln]["published"],

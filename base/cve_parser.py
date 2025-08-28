@@ -17,6 +17,8 @@ class CVEParser:
                 cve_database[cve_id] = vuln["cve"]
                 # Need to get the result
                 self.nlp_model.analyze(vuln["cve"]["descriptions"][0]["value"].replace("\n", ""))
+                vuln["cve"]["product"] = None
+                vuln["cve"]["vendor"] = None
                 cve_database[cve_id]["descriptions"] = vuln["cve"]["descriptions"][0]["value"].replace("\n", "")
                 del cve_database[cve_id]["cveTags"]
                 if "cvssMetricV40" in vuln["cve"]["metrics"].keys():
